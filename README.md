@@ -2,7 +2,7 @@
 
 1. Clone this repo
     ```shell
-    git clone https://gitub.com/jimlee2048/config-airplane.git airplane
+    git clone https://github.com/jimlee2048/config-airplane.git airplane
     ```
 
 2. Edit `.env`
