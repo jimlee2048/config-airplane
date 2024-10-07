@@ -1,0 +1,25 @@
+{
+	admin off
+	servers 127.0.0.1:88 {
+		protocols h1 h2c h2 h3
+	}
+}
+
+:80 {
+	redir https://{host}{uri} permanent
+}
+
+
+127.0.0.1:88, {$AIRPLANE_DOMAIN} {
+	@host {
+		host {$AIRPLANE_DOMAIN}
+	}
+	route @host {
+		header {
+			Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		}
+		file_server {
+			root /srv/http/default
+		}
+	}
+}

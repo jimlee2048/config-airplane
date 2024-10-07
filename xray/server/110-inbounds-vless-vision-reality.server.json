@@ -1,0 +1,34 @@
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "$VLESS_UUID",
+            "flow": "xtls-rprx-vision",
+            "level": 0,
+            "email": "admin@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": 88,
+          "serverNames": ["$AIRPLANE_DOMAIN"],
+          "privateKey": "$REALITY_PRIVKEY",
+          "shortIds": ["$REALITY_SHORTID"]
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"]
+      }
+    }
+  ]
+}

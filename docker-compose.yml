@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  caddy-xray-trojan: &caddy-template
+    profiles: ["xray-trojan"]
+    image: caddy:2
+    restart: unless-stopped
+    network_mode: host
+    env_file: .env
+    volumes:
+      - caddy_data:/data/caddy
+      - caddy_certs:/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory
+      - ./site:/srv/http/default
+      - ./caddy/xray-trojan.Caddyfile:/etc/caddy/Caddyfile
+
+  xray-trojan: &xray-template
+    profiles: ["xray-trojan"]
+    image: teddysun/xray:latest
+    restart: unless-stopped
+    depends_on:
+      - caddy-xray-trojan
+    network_mode: host
+    env_file: .env
+    volumes:
+      - caddy_certs:/certs
+      - ./xray/server:/src
+      - ./scripts:/usr/local/bin/airplane
+    entrypoint: ["/usr/local/bin/airplane/init-xray-trojan.sh"]
+    command: ""
+
+  caddy-xray-vision-reality:
+    <<: *caddy-template
+    profiles: ["xray-vless-vision-reality"]
+    volumes:
+      - caddy_data:/data/caddy
+      - caddy_certs:/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory
+      - ./site:/srv/http/default
+      - ./caddy/xray-vless-vision-reality.Caddyfile:/etc/caddy/Caddyfile
+
+  xray-vision-reality:
+    <<: *xray-template
+    profiles: ["xray-vless-vision-reality"]
+    depends_on:
+      - caddy-xray-vision-reality
+    entrypoint: ["/usr/local/bin/airplane/init-xray-vless-vision-reality.sh"]
+    command: ""
+
+  hysteria:
+    profiles: ["hysteria"]
+    image: tobyxdd/hysteria:latest
+    container_name: hysteria
+    restart: unless-stopped
+    network_mode: host
+    env_file: .env
+    volumes:
+      - hysteria_certs:/acme
+      - ./hysteria:/src
+      - ./scripts:/usr/local/bin/airplane
+    entrypoint: ["/usr/local/bin/airplane/init-hysteria.sh"]
+
+volumes:
+  caddy_data:
+  caddy_config:
+  caddy_certs:
+  hysteria_certs:

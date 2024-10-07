@@ -1,0 +1,41 @@
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "password": "$TROJAN_PASSWORD",
+            "email": "admin@example.com"
+          }
+        ],
+        "fallbacks": [
+          {
+            "dest": 88,
+            "xver": 2
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "raw",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "ocspStapling": 3600,
+              "certificateFile": "/certs/$AIRPLANE_DOMAIN/$AIRPLANE_DOMAIN.crt",
+              "keyFile": "/certs/$AIRPLANE_DOMAIN/$AIRPLANE_DOMAIN.key"
+            }
+          ],
+          "rejectUnknownSni": true,
+          "minVersion": "1.2"
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"]
+      }
+    }
+  ]
+}
